@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Noticias, eventos, filtraciones y actualizaciones de Fortnite.">
+    <meta name="theme-color" content="#0b0d18">
+
+    <title>FORTZONE | Noticias Fortnite</title>
+
+    <link rel="stylesheet" href="assets/style.css">
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Tipografía -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="nav-container">
+
+            <a href="#" class="logo" data-category="inicio">
+                <span class="logo-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </span>
+                <span>FORT<span class="logo-highlight">ZONE</span></span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle"
+                    aria-label="Abrir menú" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <nav class="navigation" id="navigation">
+                <a href="#" class="nav-link active" data-category="inicio">Inicio</a>
+                <a href="#noticias" class="nav-link" data-category="noticias">Noticias</a>
+                <a href="#noticias" class="nav-link" data-category="eventos">Eventos</a>
+                <a href="#noticias" class="nav-link" data-category="filtraciones">Filtraciones</a>
+                <a href="#noticias" class="nav-link" data-category="actualizaciones">Actualizaciones</a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+
+        <!-- PRESENTACIÓN -->
+        <section class="welcome">
+            <div class="welcome-content">
+                <span class="welcome-tag">
+                    <span class="live-dot"></span>
+                    TU PORTAL GAMING
+                </span>
+
+                <h1>TODO SOBRE <span>FORTNITE.</span></h1>
+
+                <p>
+                    Noticias, novedades, eventos y filtraciones.
+                    Mantente al día con todo lo que sucede en la isla.
+                </p>
+
+                <a href="#noticias" class="welcome-button">
+                    EXPLORAR NOTICIAS
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="welcome-decoration">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>DROP IN.</span>
+                <span>STAY INFORMED.</span>
+            </div>
+        </section>
+
+
+        <!-- NOTICIAS -->
+        <section class="news-section" id="noticias">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-subtitle">LO MÁS RECIENTE</span>
+                    <h2 id="sectionTitle">ÚLTIMAS NOTICIAS</h2>
+                </div>
+
+                <span class="news-counter" id="newsCounter">
+                    00 NOTICIAS
+                </span>
+            </div>
+
+            <!-- Las noticias se generan desde noticias.json -->
+            <div class="news-container" id="newsContainer">
+
+                <div class="loading">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    CARGANDO NOTICIAS...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <span class="logo-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </span>
+                    <span>FORT<span class="logo-highlight">ZONE</span></span>
+                </a>
+
+                <p>
+                    Tu espacio para descubrir todo lo que sucede
+                    en Fortnite.
+                </p>
+            </div>
+
+            <div class="footer-social">
+                <h3>SÍGUENOS</h3>
+
+                <div class="social-links">
+                    <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+
+                    <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <a href="https://tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+
+                    <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 FORTZONE. Todos los derechos reservados.</p>
+            <p>FORTZONE es un sitio de fans independiente y no está afiliado a Epic Games.</p>
+        </div>
+
+    </footer>
+
+
+    <!-- SISTEMA DE NOTICIAS -->
+    <script>
+
+        const newsContainer = document.getElementById("newsContainer");
+        const sectionTitle = document.getElementById("sectionTitle");
+        const newsCounter = document.getElementById("newsCounter");
+
+        const menuToggle = document.getElementById("menuToggle");
+        const navigation = document.getElementById("navigation");
+
+        let allNews = [];
+        let currentCategory = "inicio";
+
+
+        // Cargar noticias desde JSON
+        async function loadNews() {
+
+            try {
+
+                const response = await fetch("data/noticias.json");
+
+                if (!response.ok) {
+                    throw new Error("No se pudo cargar el archivo JSON");
+                }
+
+                const data = await response.json();
+
+                allNews = data.noticias || [];
+
+                renderNews();
+
+            } catch (error) {
+
+                console.error(error);
+
+                newsContainer.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <h3>NO SE PUDIERON CARGAR LAS NOTICIAS</h3>
+                        <p>Comprueba que noticias.json esté en la carpeta data y que estés usando un servidor local.</p>
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        // Mostrar noticias
+        function renderNews() {
+
+            let filteredNews = allNews;
+
+            if (currentCategory !== "inicio") {
+                filteredNews = allNews.filter(news =>
+                    news.categoria.toLowerCase() === currentCategory
+                );
+            }
+
+            // Ordenar por fecha, de más reciente a más antigua
+            filteredNews = [...filteredNews].sort((a, b) =>
+                new Date(b.fecha) - new Date(a.fecha)
+            );
+
+            sectionTitle.textContent = currentCategory === "inicio"
+                ? "ÚLTIMAS NOTICIAS"
+                : currentCategory.toUpperCase();
+
+            newsCounter.textContent =
+                `${String(filteredNews.length).padStart(2, "0")} NOTICIAS`;
+
+            if (filteredNews.length === 0) {
+
+                newsContainer.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-regular fa-newspaper"></i>
+                        <h3>NO HAY NOTICIAS DISPONIBLES</h3>
+                        <p>Pronto tendremos nuevas publicaciones.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            newsContainer.innerHTML = filteredNews.map((news, index) => {
+
+                const reverse = index % 2 !== 0 ? "reverse" : "";
+
+                const image = escapeHTML(news.imagen || "");
+                const title = escapeHTML(news.titulo || "");
+                const description = escapeHTML(news.descripcion || "");
+                const category = escapeHTML(news.categoria || "");
+                const date = escapeHTML(news.fecha || "");
+
+                return `
+
+                    <article class="news-item ${reverse}">
+
+                        <div class="news-image">
+
+                            <img
+                                src="${image}"
+                                alt="${title}"
+                                loading="lazy"
+                                onerror="this.style.display='none'"
+                            >
+
+                            <span class="image-overlay"></span>
+
+                        </div>
+
+                        <div class="news-info">
+
+                            <div class="news-meta">
+
+                                <span class="category">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    ${category}
+                                </span>
+
+                                <span class="news-date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    ${formatDate(date)}
+                                </span>
+
+                            </div>
+
+                            <h3>${title}</h3>
+
+                            <p>${description}</p>
+
+                            <a href="${safeLink(news.enlace)}"
+                               class="read-more"
+                               ${safeLink(news.enlace) !== "#" ? 'target="_blank" rel="noopener noreferrer"' : ""}>
+
+                                LEER MÁS
+                                <i class="fa-solid fa-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            }).join("");
+
+        }
+
+
+        // Evitar que el texto del JSON interprete HTML
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[char]);
+        }
+
+
+        // Validar enlaces externos
+        function safeLink(value) {
+
+            if (!value) return "#";
+
+            try {
+                const url = new URL(value, window.location.origin);
+
+                if (url.protocol === "https:" || url.protocol === "http:") {
+                    return url.href;
+                }
+
+            } catch (error) {
+                return "#";
+            }
+
+            return "#";
+        }
+
+
+        // Formato de fecha
+        function formatDate(date) {
+
+            const parsedDate = new Date(date + "T12:00:00");
+
+            if (isNaN(parsedDate)) return date;
+
+            return parsedDate.toLocaleDateString("es-MX", {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            });
+
+        }
+
+
+        // Navegación por categorías
+        document.querySelectorAll(".nav-link, .logo").forEach(link => {
+
+            link.addEventListener("click", event => {
+
+                event.preventDefault();
+
+                const category = link.dataset.category || "inicio";
+
+                currentCategory = category;
+
+                document.querySelectorAll(".nav-link").forEach(nav => {
+                    nav.classList.toggle(
+                        "active",
+                        nav.dataset.category === category
+                    );
+                });
+
+                renderNews();
+
+                navigation.classList.remove("show");
+                menuToggle.setAttribute("aria-expanded", "false");
+
+                menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+
+                if (category !== "inicio") {
+                    document.getElementById("noticias").scrollIntoView({
+                        behavior: "smooth"
+                    });
+                } else {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                }
+
+            });
+
+        });
+
+
+        // Menú móvil
+        menuToggle.addEventListener("click", () => {
+
+            const isOpen = navigation.classList.toggle("show");
+
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+
+            menuToggle.innerHTML = isOpen
+                ? '<i class="fa-solid fa-xmark"></i>'
+                : '<i class="fa-solid fa-bars"></i>';
+
+        });
+
+
+        // Iniciar
+        loadNews();
+
+    </script>
+
+</body>
+</html>
